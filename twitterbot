@@ -1,0 +1,38 @@
+import time
+
+import tweepy
+
+key = # this value is given by twitter after applying to use its api
+secret = # this value is given by twitter after applying to use its api
+
+consumer_key = # this value is given by twitter after applying to use its api
+consumer_secret = # this value is given by twitter after applying to use its api
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(key, secret)
+
+api = tweepy.API(auth)
+
+
+# This function likes the user's last 20 tweets
+def fav_tweet(api, user_handle):
+    tweets = api.user_timeline(user_handle)
+    for tweet in tweets:
+        print(tweet)  # debugging purposes
+        print('\n')
+        if tweet.in_reply_to_status_id is not None or tweet.user.id == api.me().id:
+            return  # ignore any reply tweets or tweets made by/to bot
+        if not tweet.favorited:
+            api.create_favorite(tweet.id)  # likes unfavorited tweet
+            time.sleep(30)  # prevents spam, twitter no like spam
+
+
+def iterate_people():
+    list_people = [] # an array of twitter id's. can also use usernames
+    for person in list_people:
+        fav_tweet(api, person)
+
+
+iterate_people()
+
+
